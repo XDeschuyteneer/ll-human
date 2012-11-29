@@ -117,7 +117,7 @@ char* lister(char* loc) {
             cprint("x", BOLD, RED);
           }
         }
-        printf("| - %s\n", dp->d_name);
+        printf("| %i | %s |\n", statbuf.st_size, dp->d_name);
         
       } 
         closedir (rep), rep = NULL; 
