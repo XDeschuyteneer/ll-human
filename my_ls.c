@@ -37,6 +37,19 @@ void cprint(char* mot, int style, int color) {
   printf("%c[%d;%dm%s%c[%dm", 27, style, color, mot, 27, 0);
 }
 
+void B_to_str(int B, char* repr) {
+  char type;
+  if (B < 1000) {
+    sprintf(repr, "%iB", B);
+  } else if (B < 1000000) {
+    sprintf(repr, "%.1fK", B / 1000.);
+  } else if (B < 1000000000) {
+    sprintf(repr, "%.1fM", B / 1000000.);
+  } else {
+    sprintf(repr, "%fG", B / 1000000000.);
+  }
+}
+
 char digit_to_char(int digit) {
   char s[2];
   sprintf(s, "%d", digit);
@@ -85,6 +98,7 @@ char* lister(char* loc) {
       int nums[6];
       int bin[3];
       char repr[6];
+      char size[5];
       int i;
       int j;
       while ((dp = readdir (rep))) { 
@@ -117,7 +131,8 @@ char* lister(char* loc) {
             cprint("x", BOLD, RED);
           }
         }
-        printf("| %i | %s |\n", statbuf.st_size, dp->d_name);
+        B_to_str(statbuf.st_size, size);
+        printf("| %7s | %s \n", size, dp->d_name);
         
       } 
         closedir (rep), rep = NULL; 
