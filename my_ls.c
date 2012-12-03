@@ -37,6 +37,10 @@ void cprint(char* mot, int style, int color) {
   printf("%c[%d;%dm%s%c[%dm", 27, style, color, mot, 27, 0);
 }
 
+void scprint(char* mot, char* output, int style, int color) {
+  sprintf(output, "%c[%d;%dm%s%c[%dm", 27, style, color, mot, 27, 0);
+} 
+
 void B_to_str(int B, char* repr) {
   char type;
   if (B < 1000) {
@@ -60,6 +64,25 @@ void printnbr(int nums[], char repr[], int size) {
   int i;
   for (i = 0; i < size; i++) {
     repr[i] = digit_to_char(nums[i]);
+  }
+}
+
+void printdate(time_t old) {
+  time_t  curr;
+  time(&curr);
+  double diff = difftime(curr, old);
+  if (diff < 60) {
+    printf(" | %-8s", "< 1 min");
+  } else if (diff < 600) {
+    printf(" | %-8s", "< 10 min");
+  } else if (diff < 3600) {
+    printf(" | %-8s", "< 1h");
+  } else if (diff < 2592000) {
+    printf(" | %-8s", "< 1 mois");
+  } else if (diff < 32140800) {
+    printf(" | %-8s", " < 1 an");
+  } else {
+    printf(" | %-8s", "> 1 an");
   }
 }
 
@@ -102,37 +125,30 @@ char* lister(char* loc) {
       int i;
       int j;
       while ((dp = readdir (rep))) { 
-        /* Get entry's information. */
         if (stat(dp->d_name, &statbuf) == -1)
           continue;
 
-        b10_to_bX(statbuf.st_mode, nums, 8, 6);
-        printf("|");
-        if (nums[0] == 0 && nums[1] == 4 && nums[2] == 0) {
-          printf("d");
-        } else if (nums[0] == 1 && nums[1] == 0 && nums[2] == 0) {
-          printf("-");
-        }
-        for (i = 3; i < 6; i++) {
-          b10_to_bX(nums[i], bin, 2, 3);
-          if (bin[0] == 0) {
-            printf("-");
-          } else {
-            cprint("r", BOLD, GREEN);
-          }
-          if (bin[1] == 0) {
-            printf("-");
-          } else {
-            cprint("w", BOLD, BLUE);
-          }
-          if (bin[2] == 0) {
-            printf("-");
-          } else {
-            cprint("x", BOLD, RED);
-          }
-        }
+        if (dp->d_name[0] != '.') {
+        printf("| ");
+
+        //permitions
+        cprint( (S_ISDIR(statbuf.st_mode)) ? "d" : "-", BOLD, BLUE);
+        cprint( (statbuf.st_mode & S_IRUSR) ? "r" : "-", BOLD, GREEN);
+        cprint( (statbuf.st_mode & S_IWUSR) ? "w" : "-", BOLD, RED);
+        cprint( (statbuf.st_mode & S_IXUSR) ? "x" : "-", BOLD, BLUE);
+        cprint( (statbuf.st_mode & S_IRGRP) ? "r" : "-", BOLD, GREEN);
+        cprint( (statbuf.st_mode & S_IWGRP) ? "w" : "-", BOLD, RED);
+        cprint( (statbuf.st_mode & S_IXGRP) ? "x" : "-", BOLD, BLUE);
+        cprint( (statbuf.st_mode & S_IROTH) ? "r" : "-", BOLD, GREEN);
+        cprint( (statbuf.st_mode & S_IWOTH) ? "w" : "-", BOLD, RED);
+        cprint( (statbuf.st_mode & S_IXOTH) ? "x" : "-", BOLD, BLUE);
+
+        //date modif
+        printdate(statbuf.st_mtime);
+
         B_to_str(statbuf.st_size, size);
-        printf("| %7s | %s \n", size, dp->d_name);
+        printf(" | %7s | %s \n", size, dp->d_name);
+        }
         
       } 
         closedir (rep), rep = NULL; 
@@ -141,8 +157,20 @@ char* lister(char* loc) {
 
 
 
-  int main(void){
-    cprint("hello, world!\n", BOLD, RED);
-    lister(".");
+  int main(int argc, char **argv){
+    printf("%i\n", argc);
+    if (argc == 1) {
+      lister(".");
+    } else if (argc == 2 && (strcmp(argv[1], "-a") == 0)) {
+      printf("-a .\n");
+      lister(".");
+    } else if (argc == 2) {
+      printf("%s\n", argv[1]);
+      lister(argv[1]);
+    } else if (argc == 3 && strcmp(argv[1], "-a")) {
+      printf("-a %s\n", argv[2]);
+    } else {
+      printf("erreur parametres");
+    }
     return 0;
   }
