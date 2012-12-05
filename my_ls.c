@@ -80,7 +80,7 @@ void printdate(time_t old) {
   } else if (diff < 2592000) {
     printf(" | %-8s", "< 1 mois");
   } else if (diff < 32140800) {
-    printf(" | %-8s", " < 1 an");
+    printf(" | %-8s", "< 1 an");
   } else {
     printf(" | %-8s", "> 1 an");
   }
@@ -110,25 +110,26 @@ void b10_to_bX(int num, int nums[], int base, int bits) {
 
 char* lister(char* loc) {
   DIR *rep = opendir(loc);
-  if (rep != NULL) 
-    { 
-      struct dirent  *dp;
-      struct stat     statbuf;
-      struct passwd  *pwd;
-      struct group   *grp;
-      struct tm      *tm;
-      char            datestring[256]; 
-      int nums[6];
-      int bin[3];
-      char repr[6];
-      char size[5];
-      int i;
-      int j;
-      while ((dp = readdir (rep))) { 
-        if (stat(dp->d_name, &statbuf) == -1)
-          continue;
+  chdir(loc);
+  if (rep != NULL) { 
+    struct dirent  *dp;
+    struct stat     statbuf;
+    struct passwd  *pwd;
+    struct group   *grp;
+    struct tm      *tm;
+    char            datestring[256]; 
+    int nums[6];
+    int bin[3];
+    char repr[6];
+    char size[5];
+    int i;
+    int j;
 
-        if (dp->d_name[0] != '.') {
+    while ((dp = readdir (rep))) { 
+      if (stat(dp->d_name, &statbuf) == -1)
+        continue;
+
+      if (dp->d_name[0] != '.') {
         printf("| ");
 
         //permitions
@@ -148,29 +149,31 @@ char* lister(char* loc) {
 
         B_to_str(statbuf.st_size, size);
         printf(" | %7s | %s \n", size, dp->d_name);
-        }
+      }
         
-      } 
-        closedir (rep), rep = NULL; 
-      } 
     }
-
-
-
-  int main(int argc, char **argv){
-    printf("%i\n", argc);
-    if (argc == 1) {
-      lister(".");
-    } else if (argc == 2 && (strcmp(argv[1], "-a") == 0)) {
-      printf("-a .\n");
-      lister(".");
-    } else if (argc == 2) {
-      printf("%s\n", argv[1]);
-      lister(argv[1]);
-    } else if (argc == 3 && strcmp(argv[1], "-a")) {
-      printf("-a %s\n", argv[2]);
-    } else {
-      printf("erreur parametres");
-    }
-    return 0;
+    closedir (rep), rep = NULL; 
+  } else {
+    printf("impossible d'ouvrir rep");
   }
+}
+
+
+
+int main(int argc, char **argv){
+  printf("%i\n", argc);
+  if (argc == 1) {
+    lister(".");
+  } else if (argc == 2 && (strcmp(argv[1], "-a") == 0)) {
+    printf("-a .\n");
+    lister(".");
+  } else if (argc == 2) {
+    printf("%s\n", argv[1]);
+    lister(argv[1]);
+  } else if (argc == 3 && strcmp(argv[1], "-a")) {
+    printf("-a %s\n", argv[2]);
+  } else {
+    printf("erreur parametres");
+  }
+  return 0;
+}
