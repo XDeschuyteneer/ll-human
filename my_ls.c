@@ -54,19 +54,6 @@ void B_to_str(int B, char* repr) {
   }
 }
 
-char digit_to_char(int digit) {
-  char s[2];
-  sprintf(s, "%d", digit);
-  return s[0];
-}
-
-void printnbr(int nums[], char repr[], int size) {
-  int i;
-  for (i = 0; i < size; i++) {
-    repr[i] = digit_to_char(nums[i]);
-  }
-}
-
 void printdate(time_t old) {
   time_t  curr;
   time(&curr);
@@ -86,29 +73,7 @@ void printdate(time_t old) {
   }
 }
 
-int arrToInt(int nums[], int base, int cnt) { 
-  int tmp = 0; 
-  for (cnt = cnt - 1; cnt >= 0; cnt--) 
-    { 
-      tmp += nums[cnt] * pow(base, cnt); 
-    } 
-  return tmp; 
-} 
-
-void b10_to_bX(int num, int nums[], int base, int bits) {
-  int cnt = bits - 1; 
-  while (cnt < bits && cnt >= 0) { 
-    if (num != 0) {
-      nums[cnt] = num % base; 
-      num = num / base;
-    } else {
-      nums[cnt] = 0;
-    }
-    cnt--;
-  }
-}
-
-char* lister(char* loc) {
+char* lister(char* loc, int all) {
   DIR *rep = opendir(loc);
   chdir(loc);
   if (rep != NULL) { 
@@ -129,7 +94,7 @@ char* lister(char* loc) {
       if (stat(dp->d_name, &statbuf) == -1)
         continue;
 
-      if (dp->d_name[0] != '.') {
+      if (dp->d_name[0] != '.' || all) {
         printf("| ");
 
         //permitions
@@ -161,15 +126,12 @@ char* lister(char* loc) {
 
 
 int main(int argc, char **argv){
-  printf("%i\n", argc);
   if (argc == 1) {
-    lister(".");
+    lister(".", 0);
   } else if (argc == 2 && (strcmp(argv[1], "-a") == 0)) {
-    printf("-a .\n");
-    lister(".");
+    lister(".", 1);
   } else if (argc == 2) {
-    printf("%s\n", argv[1]);
-    lister(argv[1]);
+    lister(argv[1], 0);
   } else if (argc == 3 && strcmp(argv[1], "-a")) {
     printf("-a %s\n", argv[2]);
   } else {
