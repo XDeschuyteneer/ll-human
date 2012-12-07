@@ -17,3 +17,6 @@ How to use?
 "ls++ ~/Download"       list files in the Download rep
 "ls++ -a ~/Download"    list files and hidden files in the Download rep
 
+Screenshot
+==========
+![screenshot](https://www.filepicker.io/api/file/m8orut1Rs2AOxuDJSoBP)
