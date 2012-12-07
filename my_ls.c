@@ -11,6 +11,7 @@
 #include <math.h>
 #include <xlocale.h>
 #include <stdlib.h>
+#include <unistd.h>
 /*
  * attributs
  */
@@ -132,8 +133,8 @@ int main(int argc, char **argv){
     lister(".", 1);
   } else if (argc == 2) {
     lister(argv[1], 0);
-  } else if (argc == 3 && strcmp(argv[1], "-a")) {
-    printf("-a %s\n", argv[2]);
+  } else if (argc == 3 && strcmp(argv[1], "-a") == 0) {
+    lister(argv[2], 1);
   } else {
     printf("erreur parametres");
   }
