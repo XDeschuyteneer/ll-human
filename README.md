@@ -6,16 +6,16 @@ ll-human is a sort of ls (not so complete...) with color flavour and human reada
 Installation
 ============
 
-just "gcc my_ls.c -o ls++"
-put it in your path: "~bin" for example.
+just "gcc my_ls.c -o ls++"<br>
+put it in your path: "~bin" for example.<br>
 
 How to use?
 ===========
 
-"ls++"                  list files in the current rep
-"ls++ -a"               list files and hidden files in the current rep
-"ls++ ~/Download"       list files in the Download rep
-"ls++ -a ~/Download"    list files and hidden files in the Download rep
+"ls++"                  list files in the current rep<br>
+"ls++ -a"               list files and hidden files in the current rep<br>
+"ls++ ~/Download"       list files in the Download rep<br>
+"ls++ -a ~/Download"    list files and hidden files in the Download rep<br>
 
 Screenshot
 ==========
