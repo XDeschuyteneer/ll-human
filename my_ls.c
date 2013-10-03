@@ -114,7 +114,12 @@ char* lister(char* loc, int all) {
         printdate(statbuf.st_mtime);
 
         B_to_str(statbuf.st_size, size);
-        printf(" | %7s | %s \n", size, dp->d_name);
+        printf(" | %7s | ", size);
+        if (S_ISDIR(statbuf.st_mode))
+            cprint(dp->d_name, BOLD, BLUE);
+        else
+            cprint(dp->d_name, BOLD, BLACK);
+        printf(" \n");
       }
         
     }
