@@ -24,7 +24,7 @@ const int CONCEALED = 8;
 
 /*
  * colors
- */ 
+ */
 const int BLACK = 30;
 const int RED = 31;
 const int GREEN = 32;
@@ -40,7 +40,7 @@ void cprint(char* mot, int style, int color) {
 
 void scprint(char* mot, char* output, int style, int color) {
   sprintf(output, "%c[%d;%dm%s%c[%dm", 27, style, color, mot, 27, 0);
-} 
+}
 
 void B_to_str(int B, char* repr) {
   char type;
@@ -77,13 +77,13 @@ void printdate(time_t old) {
 char* lister(char* loc, int all) {
   DIR *rep = opendir(loc);
   chdir(loc);
-  if (rep != NULL) { 
+  if (rep != NULL) {
     struct dirent  *dp;
     struct stat     statbuf;
     struct passwd  *pwd;
     struct group   *grp;
     struct tm      *tm;
-    char            datestring[256]; 
+    char            datestring[256];
     int nums[6];
     int bin[3];
     char repr[6];
@@ -91,7 +91,7 @@ char* lister(char* loc, int all) {
     int i;
     int j;
 
-    while ((dp = readdir (rep))) { 
+    while ((dp = readdir (rep))) {
       if (stat(dp->d_name, &statbuf) == -1)
         continue;
 
@@ -121,9 +121,9 @@ char* lister(char* loc, int all) {
             cprint(dp->d_name, BOLD, BLACK);
         printf(" \n");
       }
-        
+
     }
-    closedir (rep), rep = NULL; 
+    closedir (rep), rep = NULL;
   } else {
     printf("impossible d'ouvrir rep");
   }
